@@ -1027,13 +1027,8 @@ arch_atomic_xchg(atomic_t *v, int i)
 static __always_inline int
 arch_atomic_cmpxchg_acquire(atomic_t *v, int old, int new)
 {
-	printk("arch_atomic_cmpxchg_acquire(): the address of the lock: %p\n", v);
-	printk("arch_atomic_cmpxchg_acquire(): the old value: %d\n", old);
-	printk("arch_atomic_cmpxchg_acquire(): the new value: %d\n", new);
 	int ret = arch_atomic_cmpxchg_relaxed(v, old, new);
-	printk("arch_atomic_cmpxchg_acquire(): the returned value: %d\n", ret);
 	__atomic_acquire_fence();
-	printk("arch_atomic_cmpxchg_acquire(): the returned value: %d\n", ret);
 	return ret;
 }
 #define arch_atomic_cmpxchg_acquire arch_atomic_cmpxchg_acquire

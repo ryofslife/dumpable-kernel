@@ -507,9 +507,6 @@ atomic_cmpxchg(atomic_t *v, int old, int new)
 static __always_inline int
 atomic_cmpxchg_acquire(atomic_t *v, int old, int new)
 {
-	printk("atomic_cmpxchg_acquire(): the address of the lock: %p\n", v);
-	printk("atomic_cmpxchg_acquire(): the old value: %d\n", old);
-	printk("atomic_cmpxchg_acquire(): the new value: %d\n", new);
 	instrument_atomic_read_write(v, sizeof(*v));
 	return arch_atomic_cmpxchg_acquire(v, old, new);
 }
