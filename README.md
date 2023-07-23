@@ -1,1 +1,1 @@
-# kdumpable-kernel
+# dumpable-kernel
