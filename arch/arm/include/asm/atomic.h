@@ -108,7 +108,15 @@ static inline int arch_atomic_cmpxchg_relaxed(atomic_t *ptr, int old, int new)
 	int oldval;
 	unsigned long res;
 
+	printk("arch_atomic_cmpxchg_relaxed(): the counter: %d\n", ptr->counter);
+
 	prefetchw(&ptr->counter);
+
+	printk("arch_atomic_cmpxchg_relaxed(): the address of the lock: %p\n", v);
+	printk("arch_atomic_cmpxchg_relaxed(): the old value: %d\n", old);
+	printk("arch_atomic_cmpxchg_relaxed(): the new value: %d\n", new);
+	printk("arch_atomic_cmpxchg_relaxed(): the counter: %d\n", ptr->counter);
+	printk("arch_atomic_cmpxchg_relaxed(): start of the loop ---");
 
 	do {
 		__asm__ __volatile__("@ atomic_cmpxchg\n"
@@ -119,7 +127,18 @@ static inline int arch_atomic_cmpxchg_relaxed(atomic_t *ptr, int old, int new)
 		    : "=&r" (res), "=&r" (oldval), "+Qo" (ptr->counter)
 		    : "r" (&ptr->counter), "Ir" (old), "r" (new)
 		    : "cc");
+
+		printk("arch_atomic_cmpxchg_relaxed(): the res: %lu\n", res);
+		printk("arch_atomic_cmpxchg_relaxed(): the oldval: %d\n", oldval);
+		printk("arch_atomic_cmpxchg_relaxed(): the counter: %d\n", ptr->counter);
+		printk("arch_atomic_cmpxchg_relaxed(): the old value: %d\n", old);
+		printk("arch_atomic_cmpxchg_relaxed(): the new value: %d\n", new);
+		
 	} while (res);
+	printk("arch_atomic_cmpxchg_relaxed(): end of the loop ---");
+	printk("arch_atomic_cmpxchg_relaxed(): the res: %lu\n", res);
+	printk("arch_atomic_cmpxchg_relaxed(): the oldval: %d\n", oldval);
+	printk("arch_atomic_cmpxchg_relaxed(): the counter: %d\n", ptr->counter);
 
 	return oldval;
 }
