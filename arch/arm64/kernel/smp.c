@@ -1094,6 +1094,9 @@ bool cpus_are_stuck_in_kernel(void)
 {
 	bool smp_spin_tables = (num_possible_cpus() > 1 && !have_cpu_die());
 
+	printk("cpus_are_stuck_in_kernel(): number of whatever is %u\n", num_possible_cpus());
+	printk("cpus_are_stuck_in_kernel(): see if cpu is dead: %u\n", num_possible_cpus());
+
 	return !!cpus_stuck_in_kernel || smp_spin_tables ||
 		is_protected_kvm_enabled();
 }
