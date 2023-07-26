@@ -129,6 +129,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
 	if (flags & KEXEC_PRESERVE_CONTEXT)
 		image->preserve_context = 1;
 
+	// 呼び出したタイミングでマルチコアで動作している場合ははじかれる
+	// イメージをロードしたタイミングではマルチコアで動作していても問題ないはずなので無効化する
 	ret = machine_kexec_prepare(image);
 	if (ret)
 		goto out;

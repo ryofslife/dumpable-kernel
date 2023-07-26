@@ -67,9 +67,17 @@ void machine_kexec_cleanup(struct kimage *kimage)
  */
 int machine_kexec_prepare(struct kimage *kimage)
 {
+	// マルチコアで動作していたとしても一旦無視
+	// if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
+	// 	pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
+	// 	return -EBUSY;
+	// }
+
+	// このままだとマルチコアで起動することへの警告だけにとどめる
+	// この方が警告文として適切、たぶん
 	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
-		pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
-		return -EBUSY;
+		pr_err("machine_kexec_prepare(): There are remaining CPUs. They need to be handled appropriatly before machine_kexec().\n");
+		return 0;
 	}
 
 	return 0;
