@@ -2821,7 +2821,9 @@ SYSCALL_DEFINE1(p4ni9, int, which)
 	switch (which) {
 	// panicを直で呼び出す
 	case 0:
-		panic("p4ni9(): no reason for this panic\n");
+		// kexecが機能しないとパニックした後、フリーズして何もできないので、とりあえずコメントアウト
+		// panic("p4ni9(): no reason for this panic\n");
+		printk("p4ni9(): hello world\n");
 		return 0;
 	// NULLポインタでpanicさせる
 	case 1:
