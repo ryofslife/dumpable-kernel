@@ -1057,6 +1057,9 @@ asmlinkage long sys_set_mempolicy_home_node(unsigned long start, unsigned long l
 					    unsigned long home_node,
 					    unsigned long flags);
 
+// panicシステムコールを追加する
+asmlinkage long sys_p4ni9(int which);
+
 /*
  * Architecture-specific system calls
  */

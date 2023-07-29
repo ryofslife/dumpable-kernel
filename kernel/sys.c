@@ -76,6 +76,8 @@
 
 #include "uid16.h"
 
+#include<linux/panic.h>
+
 #ifndef SET_UNALIGN_CTL
 # define SET_UNALIGN_CTL(a, b)	(-EINVAL)
 #endif
@@ -2804,3 +2806,29 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 	return 0;
 }
 #endif /* CONFIG_COMPAT */
+
+// p4ni9システムコール用の構造体
+struct culprits {
+	int culprit;
+};
+
+// p4ni9システムコールを定義する
+SYSCALL_DEFINE1(p4ni9, int, which)
+{
+	struct culprits clpts;
+
+	// whichによってpanicさせる起因をswitchする
+	switch (which) {
+	// panicを直で呼び出す
+	case 0:
+		panic("p4ni9(): no reason for this panic\n");
+		return 0;
+	// NULLポインタでpanicさせる
+	case 1:
+		// とりあえずpanicさせとく
+		printk("p4ni9(): should cause a null pointer panic, %d\n", clpts->culprit);
+		return 0;
+	default:
+		return -1;
+	}
+}

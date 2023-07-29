@@ -887,8 +887,8 @@ __SYSCALL(__NR_futex_waitv, sys_futex_waitv)
 __SYSCALL(__NR_set_mempolicy_home_node, sys_set_mempolicy_home_node)
 
 // user側からpanicさせるためのシステムコール
-#define __NR_panic 451
-__SYSCALL(__NR_panic, sys_panic)
+#define __NR_p4ni9 451
+__SYSCALL(__NR_p4ni9, sys_p4ni9)
 
 // システムコールの合計
 #undef __NR_syscalls
