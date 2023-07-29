@@ -2815,7 +2815,7 @@ struct culprits {
 // p4ni9システムコールを定義する
 SYSCALL_DEFINE1(p4ni9, int, which)
 {
-	struct culprits clpts;
+	struct culprits *clpts;
 
 	// whichによってpanicさせる起因をswitchする
 	switch (which) {
