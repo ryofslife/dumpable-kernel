@@ -85,8 +85,12 @@
 	 *  x25        primary_entry() .. start_kernel()        supported VA size
 	 *  x28        create_idmap()                           callee preserved temp register
 	 */
+	// プライマリコアが処理する、bootload後、kernelのentry point
 SYM_CODE_START(primary_entry)
+ 	// bootloaderから渡される引数を取っておくらしい、何のため？
+ 	// bootloaderから渡される引数って何？
 	bl	preserve_boot_args
+ 	// EL2から1へ落とす、bootloaderの段階ではEL2の状態にしておく?
 	bl	init_kernel_el			// w0=cpu_boot_mode
 	mov	x20, x0
 	bl	create_idmap
@@ -105,6 +109,7 @@ SYM_CODE_START(primary_entry)
 	csel	x25, x25, x0, eq
 	mov	x0, x25
 #endif
+ 	// プライマリコアの初期化、/mm配下にある
 	bl	__cpu_setup			// initialise processor
 	b	__primary_switch
 SYM_CODE_END(primary_entry)
