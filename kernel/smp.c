@@ -1078,6 +1078,9 @@ early_param("nr_cpus", nrcpus);
 
 static int __init maxcpus(char *str)
 {
+
+	pr_info("maxcpus: Getting the maxcpus param from cmdline.\n");
+
 	get_option(&str, &setup_max_cpus);
 	if (setup_max_cpus == 0)
 		arch_disable_smp_support();

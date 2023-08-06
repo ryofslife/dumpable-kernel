@@ -29,6 +29,8 @@
  * branch to what would be the reset vector. It must be executed with the
  * flat identity mapping.
  */
+// machine_kexecから呼ばれる
+// 再起動のentry point
 SYM_TYPED_FUNC_START(cpu_soft_restart)
 	mov_q	x12, INIT_SCTLR_EL1_MMU_OFF
 	pre_disable_mmu_workaround

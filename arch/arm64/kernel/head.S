@@ -109,8 +109,9 @@ SYM_CODE_START(primary_entry)
 	csel	x25, x25, x0, eq
 	mov	x0, x25
 #endif
- 	// プライマリコアの初期化、/mm配下にある
+ 	// プライマリコアがmmuを扱えるように初期化、/mm配下にある
 	bl	__cpu_setup			// initialise processor
+	// mmuを有効化して、start_kernelを呼び出す
 	b	__primary_switch
 SYM_CODE_END(primary_entry)
 
@@ -470,6 +471,8 @@ SYM_FUNC_START_LOCAL(__primary_switched)
 	mov	x0, x20
 	bl	finalise_el2			// Prefer VHE if possible
 	ldp	x29, x30, [sp], #16
+	// init/main.cにあるstart_kernelを呼び出す
+	// ここからCが扱えるようになる？
 	bl	start_kernel
 	ASM_BUG()
 SYM_FUNC_END(__primary_switched)

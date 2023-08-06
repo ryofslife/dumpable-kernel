@@ -1506,11 +1506,19 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
 {
 	unsigned int cpu;
 
+	pr_info("bringup_nonboot_cpus: maximum allowed #core is %u\n", setup_max_cpus);
+	pr_info("bringup_nonboot_cpus: # of online core is %u\n", num_online_cpus());
 	for_each_present_cpu(cpu) {
-		if (num_online_cpus() >= setup_max_cpus)
+
+		pr_info("bringup_nonboot_cpus: handling core #%u\n", cpu);
+		if (num_online_cpus() >= setup_max_cpus) {
+			pr_info("bringup_nonboot_cpus: too many cores are online!");
 			break;
-		if (!cpu_online(cpu))
+		}
+		if (!cpu_online(cpu)) {
+			pr_info("bringup_nonboot_cpus: bringing up core #%u\n", cpu);
 			cpu_up(cpu, CPUHP_ONLINE);
+		}
 	}
 }
 
