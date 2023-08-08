@@ -66,6 +66,9 @@ extern void smp_init_cpus(void);
  */
 extern void set_smp_ipi_range(int ipi_base, int nr_ipi);
 
+// head.Sから呼ばれる
+asmlinkage void print_el(void);
+
 /*
  * Called from the secondary holding pen, this is the secondary CPU entry point.
  */

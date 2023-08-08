@@ -496,6 +496,8 @@ SYM_FUNC_END(__primary_switched)
  * potential context flags. These flags are *not* stored in __boot_cpu_mode.
  */
 SYM_FUNC_START(init_kernel_el)
+	// ELの状態を取得する
+	bl  print_el
 	mrs	x0, CurrentEL
 	cmp	x0, #CurrentEL_EL2
 	b.eq	init_el2

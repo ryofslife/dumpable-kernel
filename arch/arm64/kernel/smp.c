@@ -189,6 +189,13 @@ static void init_gic_priority_masking(void)
 	gic_write_pmr(GIC_PRIO_IRQON | GIC_PRIO_PSR_I_SET);
 }
 
+// head.Sから呼び出される
+// 呼び出したタイミングのELの状態をダンプする
+asmlinkage notrace void print_el(void)
+{
+	printk("print_el: Hi, from head.S!");
+}
+
 /*
  * This is the secondary CPU boot entry.  We're using this CPUs
  * idle thread stack, but a set of temporary page tables.
