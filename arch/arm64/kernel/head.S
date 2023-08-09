@@ -497,7 +497,7 @@ SYM_FUNC_END(__primary_switched)
  */
 SYM_FUNC_START(init_kernel_el)
 	// ELの状態を取得する
-	bl  print_el
+	// bl  print_el
 	mrs	x0, CurrentEL
 	cmp	x0, #CurrentEL_EL2
 	b.eq	init_el2
@@ -585,6 +585,8 @@ SYM_FUNC_END(secondary_holding_pen)
 	 * be used where CPUs are brought online dynamically by the kernel.
 	 */
 SYM_FUNC_START(secondary_entry)
+	// ここならプライマリは処理しないはず
+	bl  print_el
 	bl	init_kernel_el			// w0=cpu_boot_mode
 	b	secondary_startup
 SYM_FUNC_END(secondary_entry)
