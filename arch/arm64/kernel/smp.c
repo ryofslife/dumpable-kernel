@@ -103,7 +103,12 @@ static int boot_secondary(unsigned int cpu, struct task_struct *idle)
 	const struct cpu_operations *ops = get_cpu_ops(cpu);
 
 	if (ops->cpu_boot)
+	{
+		printk("boot_secondary: cpu_boot handler is prepared");
 		return ops->cpu_boot(cpu);
+	}
+
+	printk("boot_secondary: cpu_boot handler is not prepared");
 
 	return -EOPNOTSUPP;
 }
@@ -123,6 +128,7 @@ int __cpu_up(unsigned int cpu, struct task_struct *idle)
 	update_cpu_boot_status(CPU_MMU_OFF);
 
 	/* Now bring the CPU into our world */
+	printk("__cpu_up: boot up the cpu %u\n", cpu);
 	ret = boot_secondary(cpu, idle);
 	if (ret) {
 		pr_err("CPU%u: failed to boot: %d\n", cpu, ret);
