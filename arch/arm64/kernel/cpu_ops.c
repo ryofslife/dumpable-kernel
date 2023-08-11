@@ -42,12 +42,20 @@ static const struct cpu_operations * __init cpu_get_ops(const char *name)
 
 	ops = acpi_disabled ? dt_supported_cpu_ops : acpi_supported_cpu_ops;
 
+	printk("is acpi disabled?, %u\n", acpi_disabled);
+ 	printk("given method is %s\n", name);
+	if (*ops) {
+		printk("method specified by the assigened operator is %s\n", (*ops)->name);
+	}
+
 	while (*ops) {
 		if (!strcmp(name, (*ops)->name))
 			return *ops;
 
 		ops++;
 	}
+
+	printk("operator not yet assigned");
 
 	return NULL;
 }
@@ -99,9 +107,11 @@ static const char *__init cpu_read_enable_method(int cpu)
 int __init init_cpu_ops(int cpu)
 {
 	const char *enable_method = cpu_read_enable_method(cpu);
-
-	if (!enable_method)
-		return -ENODEV;
+	
+	if (!enable_method) {
+ 		printk("failed to read the method for enabling cpus");
+ 		return -ENODEV;
+ 	}
 
 	cpu_ops[cpu] = cpu_get_ops(enable_method);
 	if (!cpu_ops[cpu]) {
