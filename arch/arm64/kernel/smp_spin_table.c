@@ -36,7 +36,7 @@ static void write_pen_release(u64 val)
 	unsigned long size = sizeof(secondary_holding_pen_release);
 
 	// ロックしているpen?の番地を確認したい
-	printk("write_pen_release: releasing core %u\n", val);
+	printk("write_pen_release: releasing core %llu\n", val);
  	printk("write_pen_release: the address of secondary_holding_pen_release is %p\n", start);
 
 	secondary_holding_pen_release = val;
