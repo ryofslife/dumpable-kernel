@@ -586,7 +586,7 @@ SYM_FUNC_END(secondary_holding_pen)
 	 */
 SYM_FUNC_START(secondary_entry)
 	// ここならプライマリは処理しないはず
-	bl  print_el
+	// bl  print_el
 	bl	init_kernel_el			// w0=cpu_boot_mode
 	b	secondary_startup
 SYM_FUNC_END(secondary_entry)
@@ -596,6 +596,8 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	 * Common entry point for secondary CPUs.
 	 */
 	mov	x20, x0				// preserve boot mode
+	// cpu_bootハンドラがpenを解放してsecondary_startupにジャンプしてくる、はず
+	bl  print_el
 	bl	finalise_el2
 	bl	__cpu_secondary_check52bitva
 #if VA_BITS > 48
