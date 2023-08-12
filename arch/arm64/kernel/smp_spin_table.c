@@ -35,6 +35,10 @@ static void write_pen_release(u64 val)
 	void *start = (void *)&secondary_holding_pen_release;
 	unsigned long size = sizeof(secondary_holding_pen_release);
 
+	// ロックしているpen?の番地を確認したい
+	printk("write_pen_release: releasing core %u\n", val);
+ 	printk("write_pen_release: the address of secondary_holding_pen_release is %p\n", start);
+
 	secondary_holding_pen_release = val;
 	dcache_clean_inval_poc((unsigned long)start, (unsigned long)start + size);
 }
@@ -114,7 +118,9 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
 	/*
 	 * Send an event, causing the secondaries to read pen_release.
 	 */
-	sev();
+ 	printk("smp_spin_table_cpu_boot: signaling that the pen is released");
+ 	sev();
+ 	printk("smp_spin_table_cpu_boot: signal was sent");
 
 	return 0;
 }
