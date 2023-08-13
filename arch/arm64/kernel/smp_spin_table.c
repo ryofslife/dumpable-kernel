@@ -37,7 +37,8 @@ static void write_pen_release(u64 val)
 
 	// ロックしているpen?の番地を確認したい
 	printk("write_pen_release: releasing core %llu\n", val);
- 	printk("write_pen_release: the address of secondary_holding_pen_release is %p\n", start);
+	// need to %px instead of %p?
+ 	printk("write_pen_release: the address of secondary_holding_pen_release is %px\n", start);
 
 	secondary_holding_pen_release = val;
 	dcache_clean_inval_poc((unsigned long)start, (unsigned long)start + size);
