@@ -597,7 +597,7 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	 */
 	mov	x20, x0				// preserve boot mode
 	// cpu_bootハンドラがpenを解放してsecondary_startupにジャンプしてくる、はず
-	bl  print_el
+	// bl  print_el
 	bl	finalise_el2
 	bl	__cpu_secondary_check52bitva
 #if VA_BITS > 48

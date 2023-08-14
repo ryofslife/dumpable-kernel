@@ -33,6 +33,7 @@
 #include <linux/kernel_stat.h>
 #include <linux/kexec.h>
 #include <linux/kvm_host.h>
+#include <linux/t00ls.h>
 
 #include <asm/alternative.h>
 #include <asm/atomic.h>
@@ -1107,9 +1108,16 @@ bool cpus_are_stuck_in_kernel(void)
 {
 	bool smp_spin_tables = (num_possible_cpus() > 1 && !have_cpu_die());
 
-	printk("cpus_are_stuck_in_kernel(): number of whatever is %u\n", num_possible_cpus());
-	printk("cpus_are_stuck_in_kernel(): see if cpu is dead: %u\n", have_cpu_die());
+	printk("cpus_are_stuck_in_kernel: number of whatever is %u\n", num_possible_cpus());
+	printk("cpus_are_stuck_in_kernel: see if cpu is dead: %u\n", have_cpu_die());
 
 	return !!cpus_stuck_in_kernel || smp_spin_tables ||
 		is_protected_kvm_enabled();
+}
+
+void print_core_id(void)
+{
+	uint64_t id;
+	asm volatile("mrs %0, mpidr_el1" : "=r" (id));
+	printk("print_core_id: # core is %llu\n", id);
 }

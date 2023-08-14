@@ -111,6 +111,10 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 
 static int smp_spin_table_cpu_boot(unsigned int cpu)
 {
+
+	// どのコアが処理しているのか、たぶんプライマリ
+	print_core_id();
+
 	/*
 	 * Update the pen release flag.
 	 */
