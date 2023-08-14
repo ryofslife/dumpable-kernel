@@ -11,6 +11,7 @@
 #include <linux/smp.h>
 #include <linux/types.h>
 #include <linux/mm.h>
+#include <linux/t00ls.h>
 
 #include <asm/cacheflush.h>
 #include <asm/cpu_ops.h>
