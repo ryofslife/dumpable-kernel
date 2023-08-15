@@ -40,7 +40,7 @@ static void write_pen_release(u64 val)
 	printk("write_pen_release: releasing core %llu\n", val);
 	// need to %px instead of %p?
  	printk("write_pen_release: the address of secondary_holding_pen_release is %px\n", start);
-	printk("write_pen_release: secondary_holding_pen_release is %pS\n", *start);
+	printk("write_pen_release: secondary_holding_pen_release is %lu\n", (unsigned long) (*start));
 
 	secondary_holding_pen_release = val;
 	dcache_clean_inval_poc((unsigned long)start, (unsigned long)start + size);
@@ -129,8 +129,8 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
  	printk("smp_spin_table_cpu_boot: signaling that the pen is released\n");
  	sev();
 	// 解放されてsecondary_startupに遷移している場合は、secondary_holding_pen_releaseは1になるはず
- 	printk("smp_spin_table_cpu_boot: signal was sent, the secondary_holding_pen_release is %pS\n", *start);
-
+ 	printk("smp_spin_table_cpu_boot: signal was sent, the secondary_holding_pen_release is %lu\n", (unsigned long) (*start));
+	
 	return 0;
 }
 
