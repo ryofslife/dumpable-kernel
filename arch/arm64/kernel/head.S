@@ -595,6 +595,9 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	/*
 	 * Common entry point for secondary CPUs.
 	 */
+	// x3はsecondary_holding_pen_release番地が置いてある
+	// 解放されたことをinidicateするために1に書き換える
+	str	#1, [x3]
 	mov	x20, x0				// preserve boot mode
 	// cpu_bootハンドラがpenを解放してsecondary_startupにジャンプしてくる、はず
 	// bl  print_el
