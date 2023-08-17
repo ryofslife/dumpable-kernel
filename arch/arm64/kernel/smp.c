@@ -646,6 +646,8 @@ static void __init of_parse_and_init_cpus(void)
 	for_each_of_cpu_node(dn) {
 		u64 hwid = of_get_cpu_hwid(dn, 0);
 
+		printk("of_parse_and_init_cpus: mapping the core with hwid: %llu", hwid);
+
 		if (hwid & ~MPIDR_HWID_BITMASK)
 			goto next;
 
@@ -662,6 +664,9 @@ static void __init of_parse_and_init_cpus(void)
 		 * be used.
 		 */
 		if (hwid == cpu_logical_map(0)) {
+
+			printk("of_parse_and_init_cpus: core 0 is already mapped, no need for mapping");
+
 			if (bootcpu_valid) {
 				pr_err("%pOF: duplicate boot cpu reg property in DT\n",
 					dn);
@@ -683,7 +688,9 @@ static void __init of_parse_and_init_cpus(void)
 		if (cpu_count >= NR_CPUS)
 			goto next;
 
+		printk("of_parse_and_init_cpus: mapping core #%u", cpu_count);
 		pr_debug("cpu logical map 0x%llx\n", hwid);
+
 		set_cpu_logical_map(cpu_count, hwid);
 
 		early_map_cpu_to_node(cpu_count, of_node_to_nid(dn));
@@ -702,9 +709,13 @@ void __init smp_init_cpus(void)
 	int i;
 
 	if (acpi_disabled)
+	{
+		printk("smp_init_cpus: device tree based enumeration");
 		of_parse_and_init_cpus();
-	else
+	} else {
+		printk("smp_init_cpus: ACPI based enumeration");
 		acpi_parse_and_init_cpus();
+	}
 
 	if (cpu_count > nr_cpu_ids)
 		pr_warn("Number of cores (%d) exceeds configured maximum of %u - clipping\n",
