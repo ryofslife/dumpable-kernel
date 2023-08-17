@@ -119,7 +119,7 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
 	print_core_id();
 	// int cpuに紐づくhwidを確かめる
 	printk("smp_spin_table_cpu_boot: suppose to release %u", cpu);
-	printk("smp_spin_table_cpu_boot: actually releasing %llu", cpu_logical_map(cpu))
+	printk("smp_spin_table_cpu_boot: actually releasing %llu", cpu_logical_map(cpu));
 
 	/*
 	 * Update the pen release flag.
