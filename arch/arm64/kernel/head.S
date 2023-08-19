@@ -597,8 +597,10 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	 */
 	// x3はsecondary_holding_pen_release番地が置いてある
 	// 解放されたことをinidicateするために1に書き換える
-	mov x2, #0x1
+	adr_l	x3, secondary_holding_pen_release
+	mov	x2, #0xFF
 	str	x2, [x3]
+	// original code starts here
 	mov	x20, x0				// preserve boot mode
 	// cpu_bootハンドラがpenを解放してsecondary_startupにジャンプしてくる、はず
 	// bl  print_el
