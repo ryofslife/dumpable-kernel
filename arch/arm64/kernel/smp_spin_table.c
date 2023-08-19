@@ -132,7 +132,7 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
  	printk("smp_spin_table_cpu_boot: signaling that the pen is released\n");
  	sev();
 	// 解放されてsecondary_startupに遷移している場合は、secondary_holding_pen_releaseは1になるはず
-	udelay(10);
+	udelay(30);
  	printk("smp_spin_table_cpu_boot: signal was sent, the secondary_holding_pen_release is %lu\n", *(unsigned long *)start);
 
 	return 0;
