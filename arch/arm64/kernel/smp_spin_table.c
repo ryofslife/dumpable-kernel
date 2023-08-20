@@ -32,7 +32,7 @@ first_core_is_released_flag = INVALID_HWID;
 volatile unsigned long __section(".mmuoff.data.read")
 second_core_is_released_flag = INVALID_HWID;
 volatile unsigned long __section(".mmuoff.data.read")
-thrid_core_is_released_flag = INVALID_HWID;
+third_core_is_released_flag = INVALID_HWID;
 
 static phys_addr_t cpu_release_addr[NR_CPUS];
 
