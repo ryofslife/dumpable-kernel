@@ -599,9 +599,9 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	// 書き込みが行えたことをindicationはx2に置かれる
 	adr_l	x3, secondary_holding_pen_release
 	mov	x4, #0xFF
-	stlxr	x2, x4, [x3]
+	stlxr	w2, x4, [x3]
 	adr_l	x3, check_against_str_operation
-	str	x2, [x3]
+	str	w2, [x3]
 	// original code starts here
 	mov	x20, x0				// preserve boot mode
 	// cpu_bootハンドラがpenを解放してsecondary_startupにジャンプしてくる、はず
