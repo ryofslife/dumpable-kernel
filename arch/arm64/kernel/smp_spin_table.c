@@ -24,8 +24,15 @@ volatile unsigned long __section(".mmuoff.data.read")
 secondary_holding_pen_release = INVALID_HWID;
 
 // secondary_startupに遷移した際の書き込みが行われたかどうかのフラグ
+// キャッシュを防ぐためコアごとに用意する
+// volatile unsigned long __section(".mmuoff.data.read")
+// check_against_str_operation = INVALID_HWID;
 volatile unsigned long __section(".mmuoff.data.read")
-check_against_str_operation = INVALID_HWID;
+first_core_is_released_flag = INVALID_HWID;
+volatile unsigned long __section(".mmuoff.data.read")
+second_core_is_released_flag = INVALID_HWID;
+volatile unsigned long __section(".mmuoff.data.read")
+thrid_core_is_released_flag = INVALID_HWID;
 
 static phys_addr_t cpu_release_addr[NR_CPUS];
 
@@ -118,7 +125,10 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 static int smp_spin_table_cpu_boot(unsigned int cpu)
 {
 	void *start = (void *)&secondary_holding_pen_release;
-	void *flag = (void *)&check_against_str_operation;
+	// void *flag = (void *)&check_against_str_operation;
+	void *first = (void *)&first_core_is_released_flag;
+	void *second = (void *)&second_core_is_released_flag;
+	void *third = (void *)&third_core_is_released_flag;
 
 	// どのコアが処理しているのか、たぶんプライマリ
 	print_core_id();
@@ -139,7 +149,10 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
 	// 解放されてsecondary_startupに遷移している場合は、secondary_holding_pen_releaseは1になるはず
 	udelay(10);
  	printk("smp_spin_table_cpu_boot: signal was sent, the secondary_holding_pen_release is %lu\n", *(unsigned long *)start);
-	printk("smp_spin_table_cpu_boot: did str operation failed? %lu\n", *(unsigned long *)flag);
+	// printk("smp_spin_table_cpu_boot: did str operation failed? %lu\n", *(unsigned long *)flag);
+	printk("smp_spin_table_cpu_boot: is the first core released %lu\n", *(unsigned long *)first);
+	printk("smp_spin_table_cpu_boot: is the second core released %lu\n", *(unsigned long *)second);
+	printk("smp_spin_table_cpu_boot: is the third core released %lu\n", *(unsigned long *)third);
 
 	return 0;
 }

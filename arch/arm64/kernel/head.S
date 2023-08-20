@@ -595,14 +595,23 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	/*
 	 * Common entry point for secondary CPUs.
 	 */
-	// 解放されたことをinidicateするために0xFFに書き換える
-	// 書き込みが行えたことをindicationはx2に置かれる
-	adr_l	x3, secondary_holding_pen_release
-	mov	x2, #0xFF
-	str	x2, [x3]			// stlxrは使えないっぽい
-	adr_l	x3, check_against_str_operation
-	mov	x2, #0xFF
-	str	x2, [x3]
+	// どのコアを解放しているのかを判別して該当するルーティンにジャンプしてフラグを立てる
+	// キャッシュを防ぐため？
+	mrs	x2, mpidr_el1
+	mov_q	x1, MPIDR_HWID_BITMASK
+	and	x2, x2, x1
+	adr_l	x3, first_core_hwid
+	ldr	x4, [x3]
+	cmp	x4, x2
+	b.eq	first_core_is_released
+	adr_l	x3, second_core_hwid
+	ldr	x4, [x3]
+	cmp	x4, x2
+	b.eq	second_core_is_released
+	adr_l	x3, third_core_hwid
+	ldr	x4, [x3]
+	cmp	x4, x2
+	b.eq	third_core_is_released
 	// original code starts here
 	mov	x20, x0				// preserve boot mode
 	// cpu_bootハンドラがpenを解放してsecondary_startupにジャンプしてくる、はず
@@ -846,3 +855,23 @@ SYM_FUNC_START_LOCAL(__primary_switch)
 	adrp	x0, KERNEL_START		// __pa(KERNEL_START)
 	br	x8
 SYM_FUNC_END(__primary_switch)
+
+// 対象のセカンダリがsecondary_holding_penから解放されたことのフラグを立てる
+SYM_FUNC_START(first_core_is_released)
+	adr_l	x3, first_core_is_released_flag
+	mov	x5, #0xFF
+	str	x5, [x3]
+	ret
+SYM_FUNC_END(first_core_is_released)
+SYM_FUNC_START(second_core_is_released)
+	adr_l	x3, second_core_is_released_flag
+	mov	x5, #0xFF
+	str	x5, [x3]
+	ret
+SYM_FUNC_END(second_core_is_released)
+SYM_FUNC_START(third_core_is_released)
+	adr_l	x3, thrid_core_is_released_flag
+	mov	x5, #0xFF
+	str	x5, [x3]
+	ret
+SYM_FUNC_END(third_core_is_released)

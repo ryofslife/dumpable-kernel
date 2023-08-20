@@ -142,6 +142,14 @@ struct cpuhp_step {
 static DEFINE_MUTEX(cpuhp_state_mutex);
 static struct cpuhp_step cpuhp_hp_states[];
 
+// セカンダリ立ち上げ時にlogical mapのhwidを書き込む
+volatile unsigned long __section(".mmuoff.data.read")
+first_core_hwid = INVALID_HWID;
+volatile unsigned long __section(".mmuoff.data.read")
+second_core_hwid = INVALID_HWID;
+volatile unsigned long __section(".mmuoff.data.read")
+third_core_hwid = INVALID_HWID;
+
 static struct cpuhp_step *cpuhp_get_step(enum cpuhp_state state)
 {
 	return cpuhp_hp_states + state;
@@ -1506,8 +1514,15 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
 {
 	unsigned int cpu;
 
+	// secondary_startupでどのコアを立ち上げているのかを判別するため
+	// logical mapの作成は終えているので、mapを参照してセカンダリそれぞれのhwidを書き込む
+	first_core_hwid = cpu_logical_map(1);
+	second_core_hwid = cpu_logical_map(2);
+	third_core_hwid = cpu_logical_map(3);
+
 	pr_info("bringup_nonboot_cpus: maximum allowed #core is %u\n", setup_max_cpus);
 	pr_info("bringup_nonboot_cpus: # of online core is %u\n", num_online_cpus());
+	
 	for_each_present_cpu(cpu) {
 
 		pr_info("bringup_nonboot_cpus: handling core #%u\n", cpu);
