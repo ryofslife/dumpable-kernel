@@ -870,7 +870,7 @@ SYM_FUNC_START(second_core_is_released)
 	ret
 SYM_FUNC_END(second_core_is_released)
 SYM_FUNC_START(third_core_is_released)
-	adr_l	x3, thrid_core_is_released_flag
+	adr_l	x3, third_core_is_released_flag
 	mov	x5, #0xFF
 	str	x5, [x3]
 	ret
