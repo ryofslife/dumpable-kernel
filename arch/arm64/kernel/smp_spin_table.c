@@ -23,6 +23,10 @@ extern void secondary_holding_pen(void);
 volatile unsigned long __section(".mmuoff.data.read")
 secondary_holding_pen_release = INVALID_HWID;
 
+// secondary_startupに遷移した際の書き込みが行われたかどうかのフラグ
+volatile unsigned long __section(".mmuoff.data.read")
+check_against_str_operation = INVALID_HWID;
+
 static phys_addr_t cpu_release_addr[NR_CPUS];
 
 /*
@@ -114,6 +118,7 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 static int smp_spin_table_cpu_boot(unsigned int cpu)
 {
 	void *start = (void *)&secondary_holding_pen_release;
+	void *flag = (void *)&check_against_str_operation;
 
 	// どのコアが処理しているのか、たぶんプライマリ
 	print_core_id();
@@ -132,8 +137,9 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
  	printk("smp_spin_table_cpu_boot: signaling that the pen is released\n");
  	sev();
 	// 解放されてsecondary_startupに遷移している場合は、secondary_holding_pen_releaseは1になるはず
-	udelay(30);
+	udelay(10);
  	printk("smp_spin_table_cpu_boot: signal was sent, the secondary_holding_pen_release is %lu\n", *(unsigned long *)start);
+	printk("smp_spin_table_cpu_boot: did str operation failed? %lu\n", *(unsigned long *)flag);
 
 	return 0;
 }

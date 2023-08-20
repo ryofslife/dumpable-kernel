@@ -595,10 +595,12 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	/*
 	 * Common entry point for secondary CPUs.
 	 */
-	// x3はsecondary_holding_pen_release番地が置いてある
-	// 解放されたことをinidicateするために1に書き換える
+	// 解放されたことをinidicateするために0xFFに書き換える
+	// 書き込みが行えたことをindicationはx2に置かれる
 	adr_l	x3, secondary_holding_pen_release
-	mov	x2, #0xFF
+	mov	x4, #0xFF
+	strex	x2, x4, [x3]
+	adr_l	x3, check_against_str_operation
 	str	x2, [x3]
 	// original code starts here
 	mov	x20, x0				// preserve boot mode
