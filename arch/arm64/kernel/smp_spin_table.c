@@ -150,9 +150,16 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
 	udelay(10);
  	printk("smp_spin_table_cpu_boot: signal was sent, the secondary_holding_pen_release is %lu\n", *(unsigned long *)start);
 	// printk("smp_spin_table_cpu_boot: did str operation failed? %lu\n", *(unsigned long *)flag);
-	printk("smp_spin_table_cpu_boot: is the first core released %lu\n", *(unsigned long *)first);
-	printk("smp_spin_table_cpu_boot: is the second core released %lu\n", *(unsigned long *)second);
-	printk("smp_spin_table_cpu_boot: is the third core released %lu\n", *(unsigned long *)third);
+
+	if (cpu == 1) {
+		printk("smp_spin_table_cpu_boot: is the first core released %lu\n", *(unsigned long *)first);
+	}
+	else if(cpu == 2) {
+		printk("smp_spin_table_cpu_boot: is the second core released %lu\n", *(unsigned long *)second);
+	}
+	else if (cpu == 3) {
+		printk("smp_spin_table_cpu_boot: is the third core released %lu\n", *(unsigned long *)third);
+	}
 
 	return 0;
 }
