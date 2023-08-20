@@ -599,7 +599,7 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	// 書き込みが行えたことをindicationはx2に置かれる
 	adr_l	x3, secondary_holding_pen_release
 	mov	x4, #0xFF
-	strex	x2, x4, [x3]
+	stlxr	x2, x4, [x3]
 	adr_l	x3, check_against_str_operation
 	str	x2, [x3]
 	// original code starts here
