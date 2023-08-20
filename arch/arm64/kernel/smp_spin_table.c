@@ -28,11 +28,11 @@ secondary_holding_pen_release = INVALID_HWID;
 // volatile unsigned long __section(".mmuoff.data.read")
 // check_against_str_operation = INVALID_HWID;
 volatile unsigned long __section(".mmuoff.data.read")
-first_core_is_released_flag = INVALID_HWID;
+first_core_is_released_flag;
 volatile unsigned long __section(".mmuoff.data.read")
-second_core_is_released_flag = INVALID_HWID;
+second_core_is_released_flag;
 volatile unsigned long __section(".mmuoff.data.read")
-third_core_is_released_flag = INVALID_HWID;
+third_core_is_released_flag;
 
 static phys_addr_t cpu_release_addr[NR_CPUS];
 
