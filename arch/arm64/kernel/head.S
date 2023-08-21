@@ -575,7 +575,7 @@ SYM_FUNC_START(secondary_holding_pen)
 	adr_l	x3, secondary_holding_pen_release
 pen:	ldr	x4, [x3]
 	cmp	x4, x2
-	b.eq	secondary_startup
+	b.eq	flag_released
 	wfe
 	b	pen
 SYM_FUNC_END(secondary_holding_pen)
@@ -591,12 +591,8 @@ SYM_FUNC_START(secondary_entry)
 	b	secondary_startup
 SYM_FUNC_END(secondary_entry)
 
-SYM_FUNC_START_LOCAL(secondary_startup)
-	/*
-	 * Common entry point for secondary CPUs.
-	 */
-	// どのコアを解放しているのかを判別して該当するルーティンにジャンプしてフラグを立てる
-	// キャッシュを防ぐため？
+SYM_FUNC_START_LOCAL(flag_released)
+	// どのコアを扱っているかを判別して、該当するルーティンにジャンプして解放されたフラグを立てる
 	mrs	x2, mpidr_el1
 	mov_q	x1, MPIDR_HWID_BITMASK
 	and	x2, x2, x1
@@ -612,7 +608,14 @@ SYM_FUNC_START_LOCAL(secondary_startup)
 	ldr	x4, [x3]
 	cmp	x4, x2
 	b.eq	third_core_is_released
-	// original code starts here
+	// 上記のいづれかには分岐されるはず、もしされなかった場合のため
+	b	secondary_startup
+SYM_FUNC_END(flag_released)
+
+SYM_FUNC_START_LOCAL(secondary_startup)
+	/*
+	 * Common entry point for secondary CPUs.
+	 */
 	mov	x20, x0				// preserve boot mode
 	// cpu_bootハンドラがpenを解放してsecondary_startupにジャンプしてくる、はず
 	// bl  print_el
@@ -861,17 +864,17 @@ SYM_FUNC_START(first_core_is_released)
 	adr_l	x3, first_core_is_released_flag
 	mov	x5, #0xFF
 	str	x5, [x3]
-	ret
+	b	secondary_startup
 SYM_FUNC_END(first_core_is_released)
 SYM_FUNC_START(second_core_is_released)
 	adr_l	x3, second_core_is_released_flag
 	mov	x5, #0xFF
 	str	x5, [x3]
-	ret
+	b	secondary_startup
 SYM_FUNC_END(second_core_is_released)
 SYM_FUNC_START(third_core_is_released)
 	adr_l	x3, third_core_is_released_flag
 	mov	x5, #0xFF
 	str	x5, [x3]
-	ret
+	b	secondary_startup
 SYM_FUNC_END(third_core_is_released)
