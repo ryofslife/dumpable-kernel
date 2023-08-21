@@ -23,7 +23,7 @@ You can compile the source code with the options below, some of them might not b
 </pre>
 
 I also prepared a system call for triggering kernel panic. 
-The system call number is 451. It takes an argument of either 0 or 1. If you pass 0, it simply calles panic(). I'm still working on the arguments larger than 1...
+The system call number is 451. It takes an argument of either 0 or 1. If you pass 0, it simply calles panic(). I'm still working on the arguments larger than 1...<br />
 The system call should be helpful for those who wants to test kexec on RPI4 as I found the tricks for triggering kernel panic online not working such as below.
 
 <pre>
