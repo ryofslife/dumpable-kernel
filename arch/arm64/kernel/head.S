@@ -569,6 +569,12 @@ SYM_FUNC_END(set_cpu_boot_mode_flag)
 	 */
 SYM_FUNC_START(secondary_holding_pen)
 	bl	init_kernel_el			// w0=cpu_boot_mode
+	// secondary_holding_penで待機していることを確認するためのフラグ
+	adr_l	x3,	entered_secondary_holding_pen
+	ldr	x4,	[x3]
+	add	x4,	x4,	#0x1
+	str	x4,	[x3]
+	// original code starts here
 	mrs	x2, mpidr_el1
 	mov_q	x1, MPIDR_HWID_BITMASK
 	and	x2, x2, x1

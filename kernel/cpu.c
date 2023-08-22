@@ -150,6 +150,11 @@ second_core_hwid = INVALID_HWID;
 volatile unsigned long __section(".mmuoff.data.read")
 third_core_hwid = INVALID_HWID;
 
+// seondary_holding_penで待機しているのかどうかを確かめるためのフラグ
+// すべてのコアが待機していれば、セカンダリの立ち上げ終了時には3になっている、はず
+volatile unsigned long __section(".mmuoff.data.read")
+entered_secondary_holding_pen = 0;
+
 static struct cpuhp_step *cpuhp_get_step(enum cpuhp_state state)
 {
 	return cpuhp_hp_states + state;
@@ -1513,6 +1518,7 @@ int bringup_hibernate_cpu(unsigned int sleep_cpu)
 void bringup_nonboot_cpus(unsigned int setup_max_cpus)
 {
 	unsigned int cpu;
+	void *flag = (void *)&entered_secondary_holding_pen;
 
 	// secondary_startupでどのコアを立ち上げているのかを判別するため
 	// logical mapの作成は終えているので、mapを参照してセカンダリそれぞれのhwidを書き込む
@@ -1535,6 +1541,11 @@ void bringup_nonboot_cpus(unsigned int setup_max_cpus)
 			cpu_up(cpu, CPUHP_ONLINE);
 		}
 	}
+
+	// secondary_holding_penにて待機した回数
+	// コア数分なので３になる、はず
+	printk("bringup_nonboot_cpus: entered secondary_holding_pen for %lu times\n", *(unsigned long *)flag);
+
 }
 
 #ifdef CONFIG_PM_SLEEP_SMP

@@ -24,9 +24,7 @@ volatile unsigned long __section(".mmuoff.data.read")
 secondary_holding_pen_release = INVALID_HWID;
 
 // secondary_startupに遷移した際の書き込みが行われたかどうかのフラグ
-// キャッシュを防ぐためコアごとに用意する
-// volatile unsigned long __section(".mmuoff.data.read")
-// check_against_str_operation = INVALID_HWID;
+// キャッシュを防ぐため？コアごとに用意する
 volatile unsigned long __section(".mmuoff.data.read")
 first_core_is_released_flag;
 volatile unsigned long __section(".mmuoff.data.read")
@@ -125,13 +123,13 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 static int smp_spin_table_cpu_boot(unsigned int cpu)
 {
 	void *start = (void *)&secondary_holding_pen_release;
-	// void *flag = (void *)&check_against_str_operation;
 	void *first = (void *)&first_core_is_released_flag;
 	void *second = (void *)&second_core_is_released_flag;
 	void *third = (void *)&third_core_is_released_flag;
 
 	// どのコアが処理しているのか、たぶんプライマリ
 	print_core_id();
+	
 	// int cpuに紐づくhwidを確かめる
 	printk("smp_spin_table_cpu_boot: suppose to release %u", cpu);
 	printk("smp_spin_table_cpu_boot: actually releasing %llu", cpu_logical_map(cpu));
@@ -146,18 +144,19 @@ static int smp_spin_table_cpu_boot(unsigned int cpu)
 	 */
  	printk("smp_spin_table_cpu_boot: signaling that the pen is released\n");
  	sev();
+
 	// 解放されてsecondary_startupに遷移している場合は、secondary_holding_pen_releaseは1になるはず
 	udelay(10);
  	printk("smp_spin_table_cpu_boot: signal was sent, the secondary_holding_pen_release is %lu\n", *(unsigned long *)start);
-	// printk("smp_spin_table_cpu_boot: did str operation failed? %lu\n", *(unsigned long *)flag);
 
+	// キャッシュされるの？
 	if (cpu == 1) {
 		printk("smp_spin_table_cpu_boot: is the first core released %lu\n", *(unsigned long *)first);
 	}
 	else if(cpu == 2) {
 		printk("smp_spin_table_cpu_boot: is the second core released %lu\n", *(unsigned long *)second);
 	}
-	else if (cpu == 3) {
+	else {
 		printk("smp_spin_table_cpu_boot: is the third core released %lu\n", *(unsigned long *)third);
 	}
 
