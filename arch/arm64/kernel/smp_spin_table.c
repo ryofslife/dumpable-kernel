@@ -62,8 +62,10 @@ static int smp_spin_table_cpu_init(unsigned int cpu)
 	int ret;
 
 	dn = of_get_cpu_node(cpu, NULL);
-	if (!dn)
+	if (!dn) {
+		printk("smp_spin_table_cpu_init: failed to get the device node for cpu %u\n", cpu);
 		return -ENODEV;
+	}
 
 	/*
 	 * Determine the address from which the CPU is polling.
@@ -71,10 +73,12 @@ static int smp_spin_table_cpu_init(unsigned int cpu)
 	ret = of_property_read_u64(dn, "cpu-release-addr",
 				   &cpu_release_addr[cpu]);
 	if (ret)
-		pr_err("CPU %d: missing or invalid cpu-release-addr property\n",
-		       cpu);
+		printk("smp_spin_table_cpu_init: missing or invalid cpu-release-addr property for cpu %u\n", cpu);
 
 	of_node_put(dn);
+
+	printk("smp_spin_table_cpu_init: initializing cpu %u\n", cpu);
+	printk("smp_spin_table_cpu_init: the cpu's cpu-release-addr is %pa\n", &cpu_release_addr[cpu]);
 
 	return ret;
 }

@@ -109,7 +109,7 @@ int __init init_cpu_ops(int cpu)
 	const char *enable_method = cpu_read_enable_method(cpu);
 	
 	if (!enable_method) {
- 		printk("failed to read the method for enabling cpus");
+ 		printk("init_cpu_ops: failed to read the method for enabling cpus");
  		return -ENODEV;
  	}
 
