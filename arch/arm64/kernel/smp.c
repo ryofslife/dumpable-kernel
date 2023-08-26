@@ -771,16 +771,22 @@ void __init smp_prepare_cpus(unsigned int max_cpus)
 
 		per_cpu(cpu_number, cpu) = cpu;
 
-		if (cpu == smp_processor_id())
+		if (cpu == smp_processor_id()) {
+			printk("smp_prepare_cpus: cpu %u already prepared\n", cpu);
 			continue;
+		}
 
 		ops = get_cpu_ops(cpu);
-		if (!ops)
+		if (!ops) {
+			printk("smp_prepare_cpus: failed to get the ops for cpu %u\n", cpu);
 			continue;
+		}
 
 		err = ops->cpu_prepare(cpu);
-		if (err)
+		if (err) {
+			printk("smp_prepare_cpus: failed to prepare cpu %u\n", cpu);
 			continue;
+		}
 
 		set_cpu_present(cpu, true);
 		numa_store_cpu_info(cpu);
