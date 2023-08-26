@@ -108,7 +108,7 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 		return -ENODEV;
 	}
 
-	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u's cpu_release_addr is %pa", cpu, release_addr);
+	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u's cpu_release_addr is %p", cpu, release_addr);
 
 	/*
 	 * We write the release address as LE regardless of the native
@@ -122,7 +122,7 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 			    (__force unsigned long)release_addr +
 				    sizeof(*release_addr));
 
-	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u' now has pa_holding_pen of %llu", cpu, *release_addr);
+	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u now has pa_holding_pen of %llu", cpu, *release_addr);
 
 	/*
 	 * Send an event to wake up the secondary CPU.
