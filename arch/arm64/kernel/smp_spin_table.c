@@ -78,7 +78,7 @@ static int smp_spin_table_cpu_init(unsigned int cpu)
 	of_node_put(dn);
 
 	printk("smp_spin_table_cpu_init: initializing cpu %u\n", cpu);
-	printk("smp_spin_table_cpu_init: the cpu's cpu-release-addr is %pa\n", cpu_release_addr[cpu]);
+	printk("smp_spin_table_cpu_init: the cpu's cpu-release-addr is %llu\n", cpu_release_addr[cpu]);
 
 	return ret;
 }
@@ -88,7 +88,7 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 	__le64 __iomem *release_addr;
 	phys_addr_t pa_holding_pen = __pa_symbol(secondary_holding_pen);
 
-	printk("smp_spin_table_cpu_prepare: secondary_holding_pen addr is %pa", pa_holding_pen);
+	printk("smp_spin_table_cpu_prepare: secondary_holding_pen addr is %llu", pa_holding_pen);
 
 	if (!cpu_release_addr[cpu]) {
 		printk("smp_spin_table_cpu_prepare: cpu_release_addr for cpu %u not set", cpu);
@@ -108,7 +108,7 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 		return -ENODEV;
 	}
 
-	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u's cpu_release_addr is %llu", cpu, release_addr);
+	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u's cpu_release_addr is %pa", cpu, release_addr);
 
 	/*
 	 * We write the release address as LE regardless of the native
@@ -122,7 +122,7 @@ static int smp_spin_table_cpu_prepare(unsigned int cpu)
 			    (__force unsigned long)release_addr +
 				    sizeof(*release_addr));
 
-	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u' now has pa_holding_pen of %pa", cpu, *release_addr);
+	printk("smp_spin_table_cpu_prepare: io_remapped cpu %u' now has pa_holding_pen of %llu", cpu, *release_addr);
 
 	/*
 	 * Send an event to wake up the secondary CPU.
