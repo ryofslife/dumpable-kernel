@@ -1042,7 +1042,8 @@ void smp_send_stop(void)
 		cpumask_clear_cpu(smp_processor_id(), &mask);
 
 		if (system_state <= SYSTEM_RUNNING)
-			pr_crit("SMP: stopping secondary CPUs\n");
+			printk("SMP: stopping secondary CPUs\n");
+		printk("smp_send_stop: calling smp_cross_call\n");
 		smp_cross_call(&mask, IPI_CPU_STOP);
 	}
 

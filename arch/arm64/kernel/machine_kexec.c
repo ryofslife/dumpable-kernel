@@ -264,16 +264,21 @@ static void machine_kexec_mask_interrupts(void)
  */
 void machine_crash_shutdown(struct pt_regs *regs)
 {
+	int sender_cpu;
+
 	local_irq_disable();
 
+	sender_cpu = raw_smp_processor_id();
+
 	/* shutdown non-crashing cpus */
+	printk("machine_crash_shutdown: sending IPI from core %d\n", sender_cpu);
 	crash_smp_send_stop();
 
 	/* for crashing cpu */
 	crash_save_cpu(regs, smp_processor_id());
 	machine_kexec_mask_interrupts();
 
-	pr_info("Starting crashdump kernel...\n");
+	printk("Starting crashdump kernel...\n");
 }
 
 void arch_kexec_protect_crashkres(void)

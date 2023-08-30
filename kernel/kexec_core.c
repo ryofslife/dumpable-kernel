@@ -959,6 +959,9 @@ late_initcall(kexec_core_sysctl_init);
  */
 void __noclone __crash_kexec(struct pt_regs *regs)
 {
+	int responsible_cpu;
+
+	responsible_cpu = raw_smp_processor_id();
 	/* Take the kexec_lock here to prevent sys_kexec_load
 	 * running on one cpu from replacing the crash kernel
 	 * we are using after a panic on a different cpu.
@@ -968,6 +971,9 @@ void __noclone __crash_kexec(struct pt_regs *regs)
 	 * sufficient.  But since I reuse the memory...
 	 */
 	if (kexec_trylock()) {
+
+		printk("__crash_kexec: kexec_lock acquired by core %d\n", responsible_cpu);
+
 		if (kexec_crash_image) {
 			struct pt_regs fixed_regs;
 

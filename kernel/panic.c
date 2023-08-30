@@ -318,8 +318,10 @@ void panic(const char *fmt, ...)
 	this_cpu = raw_smp_processor_id();
 	old_cpu  = atomic_cmpxchg(&panic_cpu, PANIC_CPU_INVALID, this_cpu);
 
-	if (old_cpu != PANIC_CPU_INVALID && old_cpu != this_cpu)
+	if (old_cpu != PANIC_CPU_INVALID && old_cpu != this_cpu) {
+		printk("panic: core %d self stopping\n", this_cpu);
 		panic_smp_self_stop();
+	}
 
 	console_verbose();
 	bust_spinlocks(1);
@@ -354,8 +356,12 @@ void panic(const char *fmt, ...)
 	 *
 	 * Bypass the panic_cpu check and call __crash_kexec directly.
 	 */
-	if (!_crash_kexec_post_notifiers)
+	if (!_crash_kexec_post_notifiers) {
+		printk("panic: _crash_kexec_post_notifiers disabled, calling kexec\n");
 		__crash_kexec(NULL);
+	}
+
+	printk("panic: post __crash_kexec\n");
 
 	panic_other_cpus_shutdown(_crash_kexec_post_notifiers);
 

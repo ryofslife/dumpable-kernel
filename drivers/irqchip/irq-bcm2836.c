@@ -205,6 +205,8 @@ static void bcm2836_arm_irqchip_ipi_send_mask(struct irq_data *d,
 	int cpu;
 	void __iomem *mailbox0_base = intc.base + LOCAL_MAILBOX0_SET0;
 
+	printk("bcm2836_arm_irqchip_ipi_send_mask: called\n");
+
 	/*
 	 * Ensure that stores to normal memory are visible to the
 	 * other CPUs before issuing the IPI.
