@@ -260,10 +260,10 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
 	 * crash_smp_send_stop() for that.
 	 */
 	if (!crash_kexec){
-		printk("panic_other_cpus_shutdown: calling smp_send_stop()");
+		printk("panic_other_cpus_shutdown: calling smp_send_stop()\n");
 		smp_send_stop();
 	} else {
-		printk("panic_other_cpus_shutdown: calling crash_smp_send_stop()");
+		printk("panic_other_cpus_shutdown: calling crash_smp_send_stop()\n");
 		crash_smp_send_stop();
 	}
 		
