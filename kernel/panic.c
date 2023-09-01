@@ -247,8 +247,9 @@ void check_panic_on_warn(const char *origin)
  */
 static void panic_other_cpus_shutdown(bool crash_kexec)
 {
-	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
-		trigger_all_cpu_backtrace();
+	// とりあえずbacktraceさせる
+	// if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+	printk("panic_other_cpus_shutdown: is nmi backtrace is enabled: %d\n", trigger_all_cpu_backtrace());	
 
 	/*
 	 * Note that smp_send_stop() is the usual SMP shutdown function,
@@ -258,10 +259,14 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
 	 * bits in addition to stopping other CPUs, hence we rely on
 	 * crash_smp_send_stop() for that.
 	 */
-	if (!crash_kexec)
+	if (!crash_kexec){
+		printk("panic_other_cpus_shutdown: calling smp_send_stop()");
 		smp_send_stop();
-	else
+	} else {
+		printk("panic_other_cpus_shutdown: calling crash_smp_send_stop()");
 		crash_smp_send_stop();
+	}
+		
 }
 
 /**
@@ -279,7 +284,8 @@ void panic(const char *fmt, ...)
 	long i, i_next = 0, len;
 	int state = 0;
 	int old_cpu, this_cpu;
-	bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+	// bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+	bool _crash_kexec_post_notifiers = 1;
 
 	if (panic_on_warn) {
 		/*
