@@ -259,13 +259,14 @@ static void panic_other_cpus_shutdown(bool crash_kexec)
 	 * bits in addition to stopping other CPUs, hence we rely on
 	 * crash_smp_send_stop() for that.
 	 */
-	if (!crash_kexec){
-		printk("panic_other_cpus_shutdown: calling smp_send_stop()\n");
-		smp_send_stop();
-	} else {
-		printk("panic_other_cpus_shutdown: calling crash_smp_send_stop()\n");
-		crash_smp_send_stop();
-	}
+	// panicしていないコアのbacktrace採取にどう影響するのか？
+	// if (!crash_kexec){
+	// 	printk("panic_other_cpus_shutdown: calling smp_send_stop()\n");
+	// 	smp_send_stop();
+	// } else {
+	// 	printk("panic_other_cpus_shutdown: calling crash_smp_send_stop()\n");
+	// 	crash_smp_send_stop();
+	// }
 		
 }
 
