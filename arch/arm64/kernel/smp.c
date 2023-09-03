@@ -1106,7 +1106,6 @@ void crash_smp_send_stop(void)
 		pr_warn("SMP: failed to stop secondary CPUs %*pbl\n",
 			cpumask_pr_args(&mask));
 
-	num_other_online_cpus()
 	printk("crash_smp_send_stop: done, # of online cpus is %d\n", num_other_online_cpus());
 
 	sdei_mask_local_cpu();
