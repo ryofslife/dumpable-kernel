@@ -163,6 +163,8 @@ __exception_irq_entry bcm2836_arm_irqchip_handle_irq(struct pt_regs *regs)
 	int cpu = smp_processor_id();
 	u32 stat;
 
+	printk("bcm2836_arm_irqchip_handle_irq: called\n");
+
 	stat = readl_relaxed(intc.base + LOCAL_IRQ_PENDING0 + 4 * cpu);
 	if (stat) {
 		u32 hwirq = ffs(stat) - 1;

@@ -1065,13 +1065,17 @@ void crash_smp_send_stop(void)
 	static int cpus_stopped;
 	cpumask_t mask;
 	unsigned long timeout;
+	
+	printk("crash_smp_send_stop: called by %d to stop %d other cpus\n", smp_processor_id(), num_other_online_cpus());
 
 	/*
 	 * This function can be called twice in panic path, but obviously
 	 * we execute this only once.
 	 */
-	if (cpus_stopped)
+	if (cpus_stopped) {
+		printk("crash_smp_send_stop: all the non-paniced cpus should be stopped, no need for the second round\n");
 		return;
+	}
 
 	cpus_stopped = 1;
 
@@ -1080,6 +1084,7 @@ void crash_smp_send_stop(void)
 	 * not, there are no stop messages to be sent around, so just back out.
 	 */
 	if (num_other_online_cpus() == 0) {
+		printk("crash_smp_send_stop: no active cpus, no need for the stop call\n");
 		sdei_mask_local_cpu();
 		return;
 	}
@@ -1100,6 +1105,9 @@ void crash_smp_send_stop(void)
 	if (atomic_read(&waiting_for_crash_ipi) > 0)
 		pr_warn("SMP: failed to stop secondary CPUs %*pbl\n",
 			cpumask_pr_args(&mask));
+
+	num_other_online_cpus()
+	printk("crash_smp_send_stop: done, # of online cpus is %d\n", num_other_online_cpus());
 
 	sdei_mask_local_cpu();
 }
