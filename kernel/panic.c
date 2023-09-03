@@ -287,9 +287,9 @@ void panic(const char *fmt, ...)
 	int old_cpu, this_cpu;
 	// bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
 	// post notifierは無効
-	bool _crash_kexec_post_notifiers = 0;
+	// bool _crash_kexec_post_notifiers = 0;
 	// post notifierは有効
-	// bool _crash_kexec_post_notifiers = 1;
+	bool _crash_kexec_post_notifiers = 1;
 
 	if (panic_on_warn) {
 		/*
