@@ -2808,14 +2808,15 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 #endif /* CONFIG_COMPAT */
 
 // p4ni9システムコール用の構造体
-struct culprits {
-	int culprit;
-};
+// struct culprits {
+// 	int culprit;
+// };
 
 // p4ni9システムコールを定義する
 SYSCALL_DEFINE1(p4ni9, int, which)
 {
-	struct culprits *clpts;
+	int *clpts;
+	int vict;
 
 	// whichによってpanicさせる起因をswitchする
 	switch (which) {
@@ -2823,12 +2824,12 @@ SYSCALL_DEFINE1(p4ni9, int, which)
 	case 0:
 		// kexecが機能しないとパニックした後、フリーズして何もできないので、とりあえずコメントアウト
 		panic("p4ni9(): no reason for this panic\n");
-		// printk("p4ni9(): hello world\n");
 		return 0;
 	// NULLポインタでpanicさせる
 	case 1:
 		// とりあえずpanicさせとく
-		printk("p4ni9(): should cause a null pointer panic, %d\n", clpts->culprit);
+		vict = *clpts;
+		printk("p4ni9(): should cause a null pointer panic, %d\n", vict);
 		return 0;
 	default:
 		return -1;
