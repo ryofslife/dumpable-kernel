@@ -421,12 +421,12 @@ asmlinkage void noinstr el1h_64_sync_handler(struct pt_regs *regs)
 {
 	unsigned long esr = read_sysreg(esr_el1);
 
-	printk("el1h_64_sync_handler: error code is %lu", ESR_ELx_EC(esr));
+	// printk("el1h_64_sync_handler: error code is %lu", ESR_ELx_EC(esr));
 
 	switch (ESR_ELx_EC(esr)) {
 	case ESR_ELx_EC_DABT_CUR:
 	case ESR_ELx_EC_IABT_CUR:
-		printk("el1h_64_sync_handler: calling el1_abort");
+		//printk("el1h_64_sync_handler: calling el1_abort");
 		el1_abort(regs, esr);
 		break;
 	/*
@@ -434,31 +434,31 @@ asmlinkage void noinstr el1h_64_sync_handler(struct pt_regs *regs)
 	 * recursive exception when trying to push the initial pt_regs.
 	 */
 	case ESR_ELx_EC_PC_ALIGN:
-		printk("el1h_64_sync_handler: calling el1_pc");
+		//printk("el1h_64_sync_handler: calling el1_pc");
 		el1_pc(regs, esr);
 		break;
 	case ESR_ELx_EC_SYS64:
 	case ESR_ELx_EC_UNKNOWN:
-		printk("el1h_64_sync_handler: calling el1_undef");
+		//printk("el1h_64_sync_handler: calling el1_undef");
 		el1_undef(regs, esr);
 		break;
 	case ESR_ELx_EC_BTI:
-		printk("el1h_64_sync_handler: calling el1_bti");
+		//printk("el1h_64_sync_handler: calling el1_bti");
 		el1_bti(regs, esr);
 		break;
 	case ESR_ELx_EC_BREAKPT_CUR:
 	case ESR_ELx_EC_SOFTSTP_CUR:
 	case ESR_ELx_EC_WATCHPT_CUR:
 	case ESR_ELx_EC_BRK64:
-		printk("el1h_64_sync_handler: calling el1_dbg");
+		//printk("el1h_64_sync_handler: calling el1_dbg");
 		el1_dbg(regs, esr);
 		break;
 	case ESR_ELx_EC_FPAC:
-		printk("el1h_64_sync_handler: calling el1_fpac");
+		//printk("el1h_64_sync_handler: calling el1_fpac");
 		el1_fpac(regs, esr);
 		break;
 	default:
-		printk("el1h_64_sync_handler: calling default handler");
+		//printk("el1h_64_sync_handler: calling default handler");
 		__panic_unhandled(regs, "64-bit el1h sync", esr);
 	}
 }
