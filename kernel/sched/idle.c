@@ -276,10 +276,16 @@ static void do_idle(void)
 	__current_set_polling();
 	tick_nohz_idle_enter();
 
+	// コア３の場合はpreemptさせない、idle状態を維持したい
+	if (cpu == 3) {
+		preempt_disable();
+	}
+
 	while (!need_resched()) {
 		rmb();
 
-		local_irq_disable();
+		// idle時の割り込みを有効化、panicの際の割り込みを許可する
+		// local_irq_disable();
 
 		if (cpu_is_offline(cpu)) {
 			tick_nohz_idle_stop_tick();
