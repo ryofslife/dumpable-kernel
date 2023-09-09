@@ -227,10 +227,16 @@ void die(const char *str, struct pt_regs *regs, long err)
 	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
 	oops_exit();
 
-	if (in_interrupt())
+	if (in_interrupt()) {
 		panic("%s: Fatal exception in interrupt", str);
-	if (panic_on_oops)
+	} else {
+		printk("die: wasn't in a middle of any interrupt");
+	}
+	if (panic_on_oops) {
 		panic("%s: Fatal exception", str);
+	} else {
+		printk("die: only oops, calm down");
+	}
 
 	raw_spin_unlock_irqrestore(&die_lock, flags);
 
