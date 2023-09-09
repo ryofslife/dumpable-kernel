@@ -421,7 +421,7 @@ asmlinkage void noinstr el1h_64_sync_handler(struct pt_regs *regs)
 {
 	unsigned long esr = read_sysreg(esr_el1);
 
-	printk("el1h_64_sync_handler: error code is %u", ESR_ELx_EC(esr));
+	printk("el1h_64_sync_handler: error code is %lu", ESR_ELx_EC(esr));
 
 	switch (ESR_ELx_EC(esr)) {
 	case ESR_ELx_EC_DABT_CUR:
