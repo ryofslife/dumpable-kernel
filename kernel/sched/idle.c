@@ -282,8 +282,9 @@ static void do_idle(void)
 	// 	preempt_disable();
 	// }
 
-	// preempt_disableに頼らず、無条件でidleさせる
-	while (!need_resched() || cpu == 3) {
+	// preempt_disableしてもリスケされるぽい
+	// 無条件でコア３はidleさせる
+	while (cpu == 3 || !need_resched()) {
 		rmb();
 
 		// idle時の割り込みを有効化、panicの際の割り込みを許可する
