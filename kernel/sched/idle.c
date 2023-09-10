@@ -277,11 +277,14 @@ static void do_idle(void)
 	tick_nohz_idle_enter();
 
 	// コア３の場合はpreemptさせない、idle状態を維持したい
-	if (cpu == 3) {
-		preempt_disable();
-	}
+	// preempt_disableしてもリスケ要求は入るぽい
+	// if (cpu == 3) {
+	// 	preempt_disable();
+	// }
 
-	while (!need_resched()) {
+	// preempt_disableに頼らず、無条件でidleさせる
+	// while (!need_resched()) {
+	while (1) {
 		rmb();
 
 		// idle時の割り込みを有効化、panicの際の割り込みを許可する
