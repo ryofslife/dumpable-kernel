@@ -258,7 +258,7 @@ static bool keep_idle(int cpu)
 	} 
 
 	return need_resched();
-	
+
 }
 
 /*
@@ -295,7 +295,7 @@ static void do_idle(void)
 
 	// preempt_disableしてもリスケされるぽい
 	// 無条件でコア３はidleさせる
-	while (!keep_idle(cpu)) {
+	while (!need_resched()) {
 		rmb();
 
 		// idle時の割り込みを有効化、panicの際の割り込みを許可する
