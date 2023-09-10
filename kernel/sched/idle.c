@@ -283,8 +283,7 @@ static void do_idle(void)
 	// }
 
 	// preempt_disableに頼らず、無条件でidleさせる
-	// while (!need_resched()) {
-	while (1) {
+	while (!need_resched() && !(cpu == 3)) {
 		rmb();
 
 		// idle時の割り込みを有効化、panicの際の割り込みを許可する
