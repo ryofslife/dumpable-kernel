@@ -250,6 +250,17 @@ exit_idle:
 		local_irq_enable();
 }
 
+// コア３のidle状態を維持したい
+static bool keep_idle(int cpu) 
+{
+	if (cpu == 3) {
+		return false;
+	} 
+
+	return need_resched();
+	
+}
+
 /*
  * Generic idle loop implementation
  *
@@ -284,11 +295,13 @@ static void do_idle(void)
 
 	// preempt_disableしてもリスケされるぽい
 	// 無条件でコア３はidleさせる
-	while (cpu == 3 || !need_resched()) {
+	while (!keep_idle(cpu)) {
 		rmb();
 
 		// idle時の割り込みを有効化、panicの際の割り込みを許可する
-		// local_irq_disable();
+		if (cpu != 3) {
+			local_irq_disable();
+		}
 
 		if (cpu_is_offline(cpu)) {
 			tick_nohz_idle_stop_tick();
