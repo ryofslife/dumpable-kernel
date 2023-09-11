@@ -2828,7 +2828,7 @@ SYSCALL_DEFINE1(p4ni9, int, which)
 		// kexecが機能しないとパニックした後、フリーズして何もできないので、とりあえずコメントアウト
 		panic("p4ni9(): no reason for this panic\n");
 		return 0;
-	// NULLポインタでpanicさせる
+		// NULLポインタでpanicさせる
 	case 1:
 		// とりあえずpanicさせとく
 		vict = *clpts;
@@ -2838,21 +2838,21 @@ SYSCALL_DEFINE1(p4ni9, int, which)
 		printk("p4ni9(): getting the lock");
 		spin_lock(&deadlock);
 		printk("p4ni9(): got the lock");
-        spin_unlock(&deadlock);
+		spin_unlock(&deadlock);
 		printk("p4ni9(): released the lock");
 		return 0;
 	case 3:
 		printk("p4ni9(): getting the lock, won't be releasing");
 		spin_lock(&deadlock);
 		printk("p4ni9(): won't realese the lock");
-        return 0;
+		return 0;
 	case 4:
 		printk("p4ni9(): first to get the lock");
 		spin_lock(&deadlock);
 		printk("p4ni9(): second to get the lock");
 		spin_lock(&deadlock);
 		printk("p4ni9(): busy looping?");
-        return 0;
+		return 0;
 	default:
 		printk("p4ni9(): survived");
 		return -1;
