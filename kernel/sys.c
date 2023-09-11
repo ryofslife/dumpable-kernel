@@ -2812,6 +2812,9 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 // 	int culprit;
 // };
 
+spinlock_t deadlock;
+spin_lock_init(&deadlock);
+
 // p4ni9システムコールを定義する
 SYSCALL_DEFINE1(p4ni9, int, which)
 {
@@ -2831,7 +2834,27 @@ SYSCALL_DEFINE1(p4ni9, int, which)
 		vict = *clpts;
 		printk("p4ni9(): should cause a null pointer panic, %d\n", vict);
 		return 0;
+	case 2:
+		printk("p4ni9(): getting the lock");
+		spin_lock(&deadlock);
+		printk("p4ni9(): got the lock");
+        spin_unlock(&deadlock);
+		printk("p4ni9(): released the lock");
+		return 0;
+	case 3:
+		printk("p4ni9(): getting the lock, won't be releasing");
+		spin_lock(&deadlock);
+		printk("p4ni9(): won't realese the lock");
+        return 0;
+	case 4:
+		printk("p4ni9(): first to get the lock");
+		spin_lock(&deadlock);
+		printk("p4ni9(): second to get the lock");
+		spin_lock(&deadlock);
+		printk("p4ni9(): busy looping?");
+        return 0;
 	default:
+		printk("p4ni9(): survived");
 		return -1;
 	}
 }
