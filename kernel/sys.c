@@ -2812,7 +2812,7 @@ COMPAT_SYSCALL_DEFINE1(sysinfo, struct compat_sysinfo __user *, info)
 // 	int culprit;
 // };
 
-spinlock_t deadlock = SPIN_LOCK_UNLOCKED;
+DEFINE_SPINLOCK(deadlock);
 
 // p4ni9システムコールを定義する
 SYSCALL_DEFINE1(p4ni9, int, which)
