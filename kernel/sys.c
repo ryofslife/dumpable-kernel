@@ -2856,7 +2856,7 @@ SYSCALL_DEFINE1(p4ni9, int, which)
 		printk("p4ni9(): first to get the lock, disabling interrupt");
 		spin_lock_irq(&deadlock);
 		printk("p4ni9(): second to get the lock");
-		spin_lock_irq(&deadlock)
+		spin_lock_irq(&deadlock);
 		printk("p4ni9(): busy looping?");
 		return 0;
 	default:
