@@ -299,9 +299,10 @@ static void do_idle(void)
 		rmb();
 
 		// idle時の割り込みを有効化、panicの際の割り込みを許可する
-		if (cpu != 3) {
-			local_irq_disable();
-		}
+		// if (cpu != 3) {
+		// 	local_irq_disable();
+		// }
+		local_irq_disable();
 
 		if (cpu_is_offline(cpu)) {
 			tick_nohz_idle_stop_tick();
