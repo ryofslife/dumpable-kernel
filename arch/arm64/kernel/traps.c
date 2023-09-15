@@ -232,7 +232,8 @@ void die(const char *str, struct pt_regs *regs, long err)
 	} else {
 		printk("die: wasn't in a middle of any interrupt");
 	}
-	if (panic_on_oops) {
+	// used to be treated as oops
+	if (true) {
 		panic("%s: Fatal exception", str);
 	} else {
 		printk("die: only oops, calm down");
