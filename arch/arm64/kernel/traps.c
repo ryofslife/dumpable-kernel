@@ -234,6 +234,11 @@ void die(const char *str, struct pt_regs *regs, long err)
 	}
 	// used to be treated as oops
 	if (true) {
+		// 例外を呼び出す直前のレジスタの状態をダンプする
+		peintk("die: regs was %llu", regs->regs);
+		peintk("die: sp was %llu", regs->sp);
+		peintk("die: pc was %llu", regs->pc);
+		peintk("die: pstate was %llu", regs->pstate);
 		panic("%s: Fatal exception", str);
 	} else {
 		printk("die: only oops, calm down");
