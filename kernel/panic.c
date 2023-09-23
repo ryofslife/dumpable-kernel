@@ -231,11 +231,8 @@ void check_panic_on_warn(const char *origin)
 {
 	unsigned int limit;
 
-	// schedulingによる失敗はwarn扱いされている
-	// panicさせてメモリをダンプさせたいので有効化してみる
-	// if (panic_on_warn)
-		// panic("%s: panic_on_warn set ...\n", origin);
-	panic("scheduling while atomic");
+	if (panic_on_warn)
+		panic("%s: panic_on_warn set ...\n", origin);
 
 	limit = READ_ONCE(warn_limit);
 	if (atomic_inc_return(&warn_count) >= limit && limit)
