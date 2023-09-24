@@ -70,7 +70,7 @@ For the rest, you can simply follow the function and should eventually end up pa
 
 ---
 
-### Case 2: Scheduling While Atomic
+### Case 3: Scheduling While Atomic
 
 The third is my favorite😆, this case triggers 2 different errors and I'm still trying to understand it's behaviour. Most of the time it triggers translation fault, however, for once in a while, it results in scheduling error. Here I will explain whats happening with the latter case.<br />
 If you take a look at the log, it gives you below explaning that preemption was disabled at the moment of scheduling. This is expected as spinlock disables preemption and the system call exits without releasing the lock. 
@@ -96,7 +96,7 @@ Its fun to observe and study such behaviours😎.
 
 ---
 
-### Case 3: Recursive Spinlock
+### Case 4: Recursive Spinlock
 
 The fourth case tries to get the same spinlock before release the first lock. As the frist lock hasn't been released, the second attempt to acquire the lock will just keep waiting for the lock to be released, which causes a deadlock situation and will never return to the user program which called the system call. In addition, due to the spinlock disabling the preemption of the task, the CPU handling the system call will never be scheduled with any other tasks later on😏, except for interrupts.
 <pre>
@@ -127,7 +127,7 @@ The fourth case tries to get the same spinlock before release the first lock. As
 
 ---
 
-### Case 4: Recursive Spinlock With IRQ Disabled
+### Case 5: Recursive Spinlock With IRQ Disabled
 
 This case disables interrupts locally before the recursive acquisition of spinlock. Once its called, it hangs entirely without panicing. Therefore, it doesn't trigger kexec reboot and I'm having trouble doing any kind of analysis....<br /> 
 Maybe I should start looking into some other analysis tools to break this deadlock🤠.
