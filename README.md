@@ -22,14 +22,14 @@ You can compile the source code with the options below to enable the features ne
   CONFIG_PROC_KCORE=y
 </pre>
 
-I also prepared a system call for triggering kernel panic. 
+I also prepared <a href="https://github.com/ryofslife/dumpable-kernel/blob/main/kernel/sys.c#L2817">a system call</a> for triggering kernel panic. 
 The system call number is 451. It takes an argument of 0 - 5. Here is some the detail of what to expect for each case. 
 
 ---
 
 ### Case 0: <em>panic()</em>
 
-If you pass 0 as the argument, it simply calls  <a href="https://github.com/ryofslife/dumpable-kernel/blob/main/kernel/panic.c#L284">panic()</a>. Nothing interesting but its useful for testing if kexec reboot is working properly😐.
+If you pass 0 as the argument, it simply calls  <a href="https://elixir.bootlin.com/linux/latest/source/kernel/panic.c#L276">panic()</a>. Nothing interesting but its useful for testing if kexec reboot is working properly😐.
 
 ---
 
