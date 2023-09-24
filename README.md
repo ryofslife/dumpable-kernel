@@ -23,7 +23,7 @@ You can compile the source code with the options below to enable the features ne
 </pre>
 
 I also prepared a system call for triggering kernel panic. 
-The system call number is 451. It takes an argument of 0 - 5. Here is some detail of what to expect for each case. 
+The system call number is 451. It takes an argument of 0 - 5. Here is some the detail of what to expect for each case. 
 
 ---
 
@@ -98,3 +98,33 @@ When I first encountered the error, I did some reserch and found there was this 
 However, if you take a look at <a href="https://elixir.bootlin.com/linux/v6.5.5/source/arch/arm64/kernel/entry.S#L605">the recent version</a>, which is the one i'm using, you can see that the routine no longer exists🤔.<br />
 So I came to the conclusion that the system timer is the one reponsible for the scheduling which explains the other occasional translation fault. Unlike the deterministic scheduling made by work_pending waiting at the exit of the system call, there is a chance of not going through scheduling with the system timer at the moment of exting the system call. 
 Its fun to observe and study such behaviours😎.
+
+---
+
+### Case 3: Recursive Spinlock
+
+The fourth case tries to get the same spinlock before release the first lock. As the frist lock hasn't been released, the second attempt to acquire the lock will just keep waiting for the lock to be released, which causes a deadlock situation and will never return to the user program which called the system call. In addition, due to the spinlock disabling the preemption of the task, the CPU handling the system call will never be scheduled with any other tasks later on😏, except for interrupts.
+<pre>
+    crash> bt -c 1
+  PID: 2319     TASK: ffffff8063a2be00  CPU: 1    COMMAND: "p4ni9"
+   #0 [ffffffc00800bd60] crash_save_cpu at ffffffd2bdd5ef90
+   #1 [ffffffc00800bf10] ipi_handler at ffffffd2bdc28488
+   #2 [ffffffc00800bf60] handle_percpu_devid_irq at ffffffd2bdd09468
+   #3 [ffffffc00800bfa0] generic_handle_domain_irq at ffffffd2bdd01930
+   #4 [ffffffc00800bfb0] gic_handle_irq at ffffffd2bdc10128
+  --- <IRQ stack> ---
+   #5 [ffffffc009a2bb90] call_on_irq_stack at ffffffd2bdc1678c
+   #6 [ffffffc009a2bba0] do_interrupt_handler at ffffffd2bdc19248
+   #7 [ffffffc009a2bbf0] el1_interrupt at ffffffd2be79d940
+   #8 [ffffffc009a2bc10] el1h_64_irq_handler at ffffffd2be79e168
+   #9 [ffffffc009a2bd50] el1h_64_irq at ffffffd2bdc112e4
+  #10 [ffffffc009a2bd70] queued_spin_lock_slowpath at ffffffd2be7aaee4
+  #11 [ffffffc009a2bdc0] _raw_spin_lock at ffffffd2be7aa2d0
+  #12 [ffffffc009a2bde0] __arm64_sys_p4ni9 at ffffffd2be7902d0
+  #13 [ffffffc009a2be00] invoke_syscall at ffffffd2bdc299dc
+  #14 [ffffffc009a2be30] el0_svc_common at ffffffd2bdc29b18
+  #15 [ffffffc009a2be70] do_el0_svc at ffffffd2bdc29c14
+  #16 [ffffffc009a2be80] el0_svc at ffffffd2be79de90
+  #17 [ffffffc009a2bea0] el0t_64_sync_handler at ffffffd2be79e2e4
+  #18 [ffffffc009a2bfe0] el0t_64_sync at ffffffd2bdc11544
+</pre>
