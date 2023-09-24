@@ -123,3 +123,11 @@ The fourth case tries to get the same spinlock before release the first lock. As
   #17 [ffffffc009a2bea0] el0t_64_sync_handler at ffffffd2be79e2e4
   #18 [ffffffc009a2bfe0] el0t_64_sync at ffffffd2bdc11544
 </pre>
+
+
+---
+
+### Case 4: Recursive Spinlock With IRQ Disabled
+
+This case disables interrupts locally before the recursive acquisition of spinlock. Once its called, it hangs entirely without panicing. Therefore, it doesn't trigger kexec reboot and I'm having trouble doing any kind of analysis....<br /> 
+Maybe I should start looking into some other analysis tools to break this deadlock🤠.
