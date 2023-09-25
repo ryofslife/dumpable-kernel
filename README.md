@@ -89,7 +89,7 @@ Not releasing the spinlock will leave the task's preempt count > 0 as shown belo
      thread_info.preempt.count = 3,
    crash>
 </pre>
-When I first encountered the error, I did some reserch and found there was this routine, <a href="https://elixir.bootlin.com/linux/v4.20.17/source/arch/arm64/kernel/entry.S#L914">work_pending</a>. It checks if there is a scheduled task waiting after the system call and my guess was that this routine is the one responsible for the warning.<br />
+When I first encountered the error, I did some research and found there was this routine, <a href="https://elixir.bootlin.com/linux/v4.20.17/source/arch/arm64/kernel/entry.S#L914">work_pending</a>. It checks if there is a scheduled task waiting after the system call and my guess was that this routine is the one responsible for the warning.<br />
 However, if you take a look at <a href="https://elixir.bootlin.com/linux/v6.5.5/source/arch/arm64/kernel/entry.S#L605">the recent version</a>, which is the one I'm using, you can see that the routine no longer exists🤔.<br />
 So I came to the conclusion that the system timer is the one reponsible for the scheduling which explains the other occasional translation fault. Unlike the deterministic scheduling made by work_pending waiting at the exit of every system call, there is a chance of not going through scheduling with the system timer at the moment of exiting the system call. 
 Its fun to observe and study such behaviours😎.
