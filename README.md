@@ -17,6 +17,8 @@ You can compile the source code with the options below to enable the features ne
   CONFIG_PROC_KCORE=y
 </pre>
 
+There are bunch of codes that I prepared in order to understand some of the behaviour regarding kexec reboot. You can find the notes <a href="https://scrapbox.io/ryozioput/kexec%E3%82%92%E3%83%9E%E3%83%AB%E3%83%81%E3%82%B3%E3%82%A2%E3%81%A7%E5%8B%95%E4%BD%9C%E3%81%95%E3%81%9B%E3%82%8B%E3%81%93%E3%81%A8%E3%81%AE%E4%BD%95%E3%81%8C%E5%95%8F%E9%A1%8C%E3%81%A0%E3%81%A3%E3%81%9F%E3%81%AE%E3%81%8B">here</a>.
+
 I also prepared <a href="https://github.com/ryofslife/dumpable-kernel/blob/main/kernel/sys.c#L2817">a system call</a> for triggering kernel panic. 
 The system call number is 451. It takes an argument of 0 - 5. Here is some the detail of what to expect for each case. 
 
