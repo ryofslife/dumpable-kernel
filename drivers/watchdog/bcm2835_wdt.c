@@ -131,10 +131,14 @@ static int bcm2835_restart(struct watchdog_device *wdog,
 
 	// Allow extra arguments separated by spaces after
 	// the partition number.
-	if (data && sscanf(data, "%lu", &val) && val < 63)
-		partition = val;
 
-	__bcm2835_restart(wdt, partition);
+	// 再起動を止めたい
+	// if (data && sscanf(data, "%lu", &val) && val < 63)
+	// 	partition = val;
+
+	// __bcm2835_restart(wdt, partition);
+
+	printk("bcm2835_restart: no barking\n");
 
 	return 0;
 }
