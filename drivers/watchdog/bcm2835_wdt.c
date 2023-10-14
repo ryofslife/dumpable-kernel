@@ -175,7 +175,7 @@ static void bcm2835_power_off(void)
 	struct bcm2835_wdt *wdt = bcm2835_power_off_wdt;
 
 	/* Partition 63 tells the firmware that this is a halt */
-	__bcm2835_restart(wdt, 63);
+	// __bcm2835_restart(wdt, 63);
 }
 
 static int bcm2835_wdt_probe(struct platform_device *pdev)
