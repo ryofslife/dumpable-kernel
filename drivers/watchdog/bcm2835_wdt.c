@@ -133,10 +133,10 @@ static int bcm2835_restart(struct watchdog_device *wdog,
 	// the partition number.
 
 	// 再起動を止めたい
-	// if (data && sscanf(data, "%lu", &val) && val < 63)
-	// 	partition = val;
+	if (data && sscanf(data, "%lu", &val) && val < 63)
+		partition = val;
 
-	// __bcm2835_restart(wdt, partition);
+	__bcm2835_restart(wdt, partition);
 
 	printk("bcm2835_restart: no barking\n");
 
@@ -175,7 +175,7 @@ static void bcm2835_power_off(void)
 	struct bcm2835_wdt *wdt = bcm2835_power_off_wdt;
 
 	/* Partition 63 tells the firmware that this is a halt */
-	// __bcm2835_restart(wdt, 63);
+	__bcm2835_restart(wdt, 63);
 }
 
 static int bcm2835_wdt_probe(struct platform_device *pdev)
