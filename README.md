@@ -1,6 +1,6 @@
 # dumpable-kernel
 
-As of 10/24/2023, I'm trying to add a NMI dumping mechanism, using something like button or watchdog.  
+As of 10/25/2023, I'm trying to add a NMI dumping mechanism, using something like button or watchdog.  
 
 ---
 
