@@ -1,5 +1,9 @@
 # dumpable-kernel
 
+As of 10/24/2023, I'm trying to add a NMI dumping mechanism, using something like button or watchdog.  
+
+---
+
 I wanted to try out the kernel dump on RPI4 so I made some changes to the original source code found below.<br />
 https://github.com/raspberrypi/linux <br />
 You can compile the source code with the options below to enable the features necessary for kdump to work. Note that some of them might not be necessary if you only want to try the kexec reboot.<br />
