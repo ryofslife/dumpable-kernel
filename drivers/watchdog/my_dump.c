@@ -11,7 +11,7 @@ static int __init dump_init(void)
     printk("dump_init: Hello world\n");
 
     // LEDを点灯する 
-    gpio_set_value(GPIO_PIN_LED, 1);
+    gpio_direction_output(GPIO_PIN_LED, 1);
 
     return 0; 
 } 
