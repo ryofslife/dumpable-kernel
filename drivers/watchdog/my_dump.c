@@ -2,12 +2,21 @@
 #include <linux/module.h> 
 #include <linux/printk.h>
 #include <linux/gpio.h>
+#include <linux/interrupt.h>
 
 #define GPIO_PIN_LED 16
 #define GPIO_PIN_HIGH 1
 #define GPIO_PIN_BTN 10
 
 int irq;
+
+static irqreturn_t dump_intr(int irq, void *dev_id)
+{
+
+    printk("dump_intr: button was pressed!\n");
+
+    return IRQ_HANDLED;
+}
 
 static int __init dump_init(void) 
 { 
@@ -43,7 +52,7 @@ static void __exit dump_exit(void)
     gpio_set_value(GPIO_PIN_LED, 0);
 
     // 登録していた割り込みを解放する
-    free_irq(GPIO_irqNumber,NULL);
+    free_irq(irq,NULL);
 
 } 
 
