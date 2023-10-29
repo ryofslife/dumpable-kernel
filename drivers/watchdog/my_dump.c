@@ -33,7 +33,7 @@ static int __init dump_init(void)
     irq = gpio_to_irq(GPIO_PIN_BTN);
     printk("dump_init: given irq was %d\n", irq);
 
-    if (request_irq(irq, (void*)dump_intr, IRQF_TRIGGER_RISING, "dump_intr", NULL) < 0) {
+    if (request_irq(irq, (void*)dump_intr, IRQF_SHARED | IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING, "dump_intr", NULL) < 0) {
         printk("dump_init: error registering interrupt handler\n");
         return -1;
     }
