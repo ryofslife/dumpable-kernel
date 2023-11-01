@@ -6,7 +6,7 @@
 
 #define GPIO_PIN_LED 16
 #define GPIO_PIN_HIGH 1
-#define GPIO_PIN_BTN 10
+#define GPIO_PIN_BTN 14
 
 int irq;
 
@@ -25,6 +25,11 @@ static int __init dump_init(void)
 
     // LEDを点灯する 
     gpio_direction_output(GPIO_PIN_LED, 1);
+
+    if (gpio_request(GPIO_25_IN,"GPIO_25_IN") < 0) {
+        printk("dump_init: request failed for gpio %d \n", GPIO_PIN_BTN);
+        return -1;
+    }
 
     // GPIO10を入力にする
     gpio_direction_input(GPIO_PIN_BTN);
