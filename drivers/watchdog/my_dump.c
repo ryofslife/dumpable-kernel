@@ -26,7 +26,7 @@ static int __init dump_init(void)
     // LEDを点灯する 
     gpio_direction_output(GPIO_PIN_LED, 1);
 
-    if (gpio_request(GPIO_25_IN,"GPIO_25_IN") < 0) {
+    if (gpio_request(GPIO_PIN_BTN,"GPIO_PIN_BTN") < 0) {
         printk("dump_init: request failed for gpio %d \n", GPIO_PIN_BTN);
         return -1;
     }
